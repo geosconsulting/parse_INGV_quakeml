@@ -1,0 +1,10 @@
+http://webservices.ingv.it/fdsnws/event/1/query?starttime=2022-01-01T00:00:00&endtime=2022-12-31T00:00:00&minmag=4.0&maxmag=9.0&minlatitude=35.0&maxlatitude=49.0&minlongitude=5.0&maxlongitude=20.0&limit=15000
+
+
+https://webservices.ingv.it/fdsnws/event/1/query?starttime=2022-01-01T00%3A00%3A00&endtime=2022-12-31T00%3A00%3A00&minlat=35.0&maxlat=49.0&minlon=5&maxlon=20&minmag=4&maxmag=9&orderby=time&format=xml&includeallorigins=false&includeallmagnitudes=false&includeallstationsmagnitudes=false&includearrivals=false
+
+
+curl -X GET "https://webservices.ingv.it/fdsnws/event/1/query?starttime=2022-01-01T00%3A00%3A00&endtime=2022-12-31T00%3A00%3A00&minlat=35.0&maxlat=49.0&minlon=5&maxlon=20&minmag=4&maxmag=9&orderby=time&format=xml&includeallorigins=false&includeallmagnitudes=false&includeallstationsmagnitudes=false&includearrivals=false" -H  "accept: application/xml"
+
+
+curl -X GET "https://webservices.ingv.it/fdsnws/event/1/query?starttime=2022-01-01T00%3A00%3A00&endtime=2022-12-31T00%3A00%3A00&minlat=35.0&maxlat=49.0&minlon=5&maxlon=20&minmag=4&maxmag=9&orderby=time&format=xml&includeallorigins=false&includeallmagnitudes=false&includeallstationsmagnitudes=false&includearrivals=false" -H  "accept: application/xml"
