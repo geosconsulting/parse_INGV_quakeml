@@ -45,8 +45,8 @@ for actor in root.findall('real_person:actor', ns):
 
 print("*****************************************************************")
 
-esso = root.iterfind("./real_person:actor/{*}name/")
-for illo in esso:
-    print(illo.text)
+# esso = root.iterfind("./real_person:actor/{*}name/")
+# for illo in esso:
+#     print(illo.text)
 
 
