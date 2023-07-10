@@ -1,3 +1,4 @@
+import json
 from datetime import datetime
 from urllib.request import urlopen
 import xml.etree.ElementTree as ET
@@ -56,7 +57,7 @@ class WSDataSource(object):
 
         if search_method == 'buffer':
             query_string = f'{query_string}&lat={self.lat}&lon={self.lon}' \
-                        f'&minradiuskm={self.min_radius_km}&maxradiuskm={self.max_radius_km}'
+                           f'&minradiuskm={self.min_radius_km}&maxradiuskm={self.max_radius_km}'
 
         elif search_method == 'bbox':
             query_string = f'{query_string}&minlatitude={self.min_latitude_bbox}' \
@@ -66,14 +67,14 @@ class WSDataSource(object):
         self.query_string = query_string
 
     def fetch_events(self) -> None:
-        if self.response_format != 'xml':
-            self.events = urlopen(self.query_string).readlines()
-        self.events = urlopen(self.query_string)
-
-    def get_events(self) -> List[str]:
-        if self.response_format != 'xml':
-            return self.events
-        return ET.parse(self.events)
+        if self.response_format == 'text':
+            url_file_opened_txt = urlopen(self.query_string)
+            events_text = url_file_opened_txt.readlines()
+            self.events = events_text
+        elif self.response_format == 'xml':
+            url_file_opened_xml = urlopen(self.query_string)
+            events_xml = ET.parse(url_file_opened_xml)
+            self.events = events_xml
 
     def transform_events_to_df(self):
         columns = self.events[0]
@@ -88,7 +89,9 @@ class WSDataSource(object):
 
         df = pd.DataFrame(coded_events, columns=cols)
 
-        return df
+        res = df.to_json(orient="records")
+        parsed = json.loads(res)
+        return parsed
 
     @staticmethod
     def transform_events_to_geo_df(df: pd.DataFrame) -> gpd.GeoDataFrame:
