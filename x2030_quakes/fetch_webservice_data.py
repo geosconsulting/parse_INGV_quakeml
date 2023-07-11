@@ -1,12 +1,12 @@
 import json
 from datetime import datetime
-from urllib.request import urlopen
+import xml.etree.ElementTree as ET
 import xml.etree.ElementTree as ET
 from urllib.request import urlopen
 from dateutil.relativedelta import relativedelta
-from typing import List
 import pandas as pd
 import geopandas as gpd
+from starlette.responses import JSONResponse
 
 
 class WSDataSource(object):
@@ -89,9 +89,12 @@ class WSDataSource(object):
 
         df = pd.DataFrame(coded_events, columns=cols)
 
-        res = df.to_json(orient="records")
-        parsed = json.loads(res)
-        return parsed
+        # res = df.to_json(orient="records")
+        # parsed = json.loads(res)
+        result = df.to_dict('records')
+        parsed = JSONResponse(content=result)
+
+        return df, parsed
 
     @staticmethod
     def transform_events_to_geo_df(df: pd.DataFrame) -> gpd.GeoDataFrame:
@@ -100,8 +103,10 @@ class WSDataSource(object):
 
     def filter_events_by_province(self, df: pd.DataFrame, province: str) -> gpd.GeoDataFrame:
         joined = gpd.sjoin(left_df=df, right_df=self.provinces_gdf, how='left')
-        list(joined['adm2_name'].unique())
-        return joined.loc[joined['adm2_name'] == province]
+        quakes_by_province = joined.loc[joined['adm2_name'] == province]
+        res = quakes_by_province.to_json()
+        parsed = json.loads(res)
+        return quakes_by_province, parsed
 
     def process_xml_response(self):
         ns = {'q': "http://quakeml.org/xmlns/quakeml/1.2",
